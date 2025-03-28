@@ -9,6 +9,9 @@ float inputBuffer[2] = {0.0, 0.0};
 float outputBuffer[2] = {0.0, 0.0};
 float armaBuffer[10] = {0.0}; // Buffer for ARMA moving average
 
+const int ledPin = 7; // LED pin (external LED connected to pin 7)
+const float threshold = 0.1; // Adjustable threshold
+
 void setup() {
   Serial.begin(9600); 
 }
@@ -42,13 +45,20 @@ void loop() {
   }
   armaAverage /= 10.0;
 
+  if (armaAverage > threshold) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
   // Print results
   // Serial.print("Output: ");
   // Serial.print(outputSignal);
   // Serial.print(" | Absolute: ");
   // Serial.print(absOutput);
-  Serial.print(" | ARMA: ");
-  Serial.println(armaAverage);
+  Serial.print(armaAverage);
+  Serial.print("\t");
+  Serial.println(threshold);
 
   delay(1);  // 1 ms delay, sampling rate ~1000 Hz
 }
